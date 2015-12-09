@@ -11,75 +11,110 @@ namespace NeuralNet
         static void Main(string[] args)
         {
 
-            for (int x = 0; x < numWindows; x++)
+            int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt", SearchOption.AllDirectories)
+                             select file).Count();
+
+            
+
+            for (int x = 0; x < fileCount; x++)
             {
 
                 //CreateTrainingFile("test");
 
                 //need to include iterations
-                TrainingData trainData = new TrainingData("train.txt");
-                TrainingData testData = new TrainingData("test.txt");
+                string train = "train" + x.ToString("D3") + ".txt";
+                string test = "test" + x.ToString("D3") + ".txt";
+                string lastTrainError = "";
+
+                Console.WriteLine("file {0} out of {1}", x+1, fileCount);
+
+                TrainingData trainData = new TrainingData(train);
+                TrainingData testData = new TrainingData(test);
 
                 // e.g., { 3, 2, 1 }
                 List<int> topology = new List<int>();
+                List<int> topologyTest = new List<int>();
                 List<double> inputVals = new List<double>();
+                List<double> testInputVals = new List<double>();
                 List<double> targetVals = new List<double>();
                 List<double> resultVals = new List<double>();
                 trainData.getTopology(topology);
 
                 NeuralNet myNet = new NeuralNet(topology);
 
+                List<double> finalTrainOutput = new List<double>();
+                List<double> finalTrainTargets = new List<double>();
+
+                List<double> testInputs = new List<double>();
+                List<double> testTargets = new List<double>();
+                List<double> testOutputs = new List<double>();
+
                 int trainingPass = 0;
+                Console.WriteLine("train pass");
                 while (!trainData.isEof())
                 {
                     ++trainingPass;
-                    Console.Write("\nPass " + trainingPass);
+                    //Console.Write("\nPass " + trainingPass);
                     // Get new input data and feed it forward:
                     if (trainData.getNextInputs(inputVals) != topology[0])
                     {
                         break;
                     }
-                    showVectorVals("Inputs:", inputVals);
+                    //showVectorVals("Inputs:", inputVals);
                     myNet.feedForward(inputVals);
                     // Collect the net's actual output results:
                     myNet.getResults(resultVals);
-                    showVectorVals("Outputs:", resultVals);
+                    //showVectorVals("Outputs:", resultVals);
                     // Train the net what the outputs should have been:
                     trainData.getTargetOutputs(targetVals);
-                    showVectorVals("Targets:", targetVals);
+                    //showVectorVals("Targets:", targetVals);
+
+                    //new
+                    finalTrainTargets = targetVals;
+
                     Debug.Assert(targetVals.Count == topology.Last());
                     myNet.backProp(targetVals);
                     // Report how well the training is working, average over recent
                     // samples:
-                    Console.WriteLine("Net recent average error: "
-                        + myNet.RecentAverageError);
+                    //Console.WriteLine("Net recent average error: " + myNet.RecentAverageError);
+                    lastTrainError = "Net recent average error: " + myNet.RecentAverageError;
                     //if ((trainingPass > 100) && (myNet.RecentAverageError < .03)) break; 
                 }
+
+                //desired output
+                showVectorVals("Last Training Output:", resultVals);
+                //trainData.getTargetOutputs(targetVals);
+                showVectorVals("Last Training Targets:", finalTrainTargets);
+                Console.WriteLine("Net recent average error: " + lastTrainError);
+
                 trainData.close();
 
-                testData.getTopology(topology);
+                testData.getTopology(topologyTest);
+
+                Console.WriteLine("test pass");
 
                 while (!testData.isEof())
                 {
-                    Console.WriteLine("test pass");
-                    if (testData.getNextInputs(inputVals) != topology[0])
+                    
+                    if (testData.getNextInputs(testInputVals) != topology[0])
                     {
                         break;
                     }
+                    
                     //test data
-                    showVectorVals("Inputs:", inputVals);
-                    myNet.feedForward(inputVals);
+                    //showVectorVals("Inputs:", testInputVals);
+                    myNet.feedForward(testInputVals);
                     // Collect the net's actual output results:
                     myNet.getResults(resultVals);
-                    showVectorVals("Outputs:", resultVals);
+                    showVectorVals("Test Outputs:", resultVals);
                     // Train the net what the outputs should have been:
                     testData.getTargetOutputs(targetVals);
-                    showVectorVals("Targets:", targetVals);
+                    showVectorVals("Test Targets:", targetVals);
                     Debug.Assert(targetVals.Count == topology.Last());
                 }
                 testData.close();
 
-                Console.WriteLine("\nDone");
+                //Console.WriteLine("\nDone");
 
 
 

@@ -26,7 +26,7 @@ namespace NeuralNet
                 {
                     m_layers[layerNum].Add(new Neuron(numOutputs, neuronNum));
                 }
-                Console.WriteLine("Constructed a Layer");
+                //Console.WriteLine("Constructed a Layer");
                 // force the bias node's output value to 1.0. It's the last neuron created above
                 m_layers.Last().Last().OutputVal = 1.0;
             }
@@ -35,7 +35,7 @@ namespace NeuralNet
         public void feedForward(List<double> inputVals)
         {
             Debug.Assert(inputVals.Count == m_layers[0].Count - 1);
-            Console.WriteLine("Running NeuralNet.feedForward");
+            //Console.WriteLine("Running NeuralNet.feedForward");
             // Assign (latch) the input values into the input neurons
             for (int input = 0; input < inputVals.Count; ++input)
             {
@@ -110,7 +110,7 @@ namespace NeuralNet
 
         public void getResults(List<double> resultVals)
         {
-            Console.WriteLine("Running NeuralNet.getResults");
+            //Console.WriteLine("Running NeuralNet.getResults");
             resultVals.Clear();
 
             for (int node = 0; node < m_layers.Last().Count - 1; ++node)

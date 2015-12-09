@@ -45,7 +45,7 @@ namespace NeuralNet
                 m_outputWeights.Add(new Connection(RandomWeight()));
             }
             m_myIndex = myIndex;
-            Console.WriteLine("Constructed a Neuron");
+            //Console.WriteLine("Constructed a Neuron");
         }
 
         public double OutputVal
