@@ -11,7 +11,7 @@ namespace NeuralNet
         static void Main(string[] args)
         {
 
-            int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt", SearchOption.AllDirectories)
+            int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt")
                              select file).Count();
 
             
