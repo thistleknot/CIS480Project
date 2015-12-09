@@ -1,0 +1,12 @@
+C:\Users\Ron\Google Drive\CIS480\CIS480Project\NeuralNet\bin\Debug\NeuralNet.exe.config
+C:\Users\Ron\Google Drive\CIS480\CIS480Project\NeuralNet\obj\Debug\NeuralNet.csprojResolveAssemblyReference.cache
+C:\Users\Ron\Google Drive\CIS480\CIS480Project\NeuralNet\bin\Debug\NeuralNet.exe
+C:\Users\Ron\Google Drive\CIS480\CIS480Project\NeuralNet\bin\Debug\NeuralNet.pdb
+C:\Users\Ron\Google Drive\CIS480\CIS480Project\NeuralNet\obj\Debug\NeuralNet.exe
+C:\Users\Ron\Google Drive\CIS480\CIS480Project\NeuralNet\obj\Debug\NeuralNet.pdb
+C:\Users\User\Documents\School\cis 480\Project\CIS480Project\NeuralNet\bin\Debug\NeuralNet.exe.config
+C:\Users\User\Documents\School\cis 480\Project\CIS480Project\NeuralNet\obj\Debug\NeuralNet.exe
+C:\Users\User\Documents\School\cis 480\Project\CIS480Project\NeuralNet\obj\Debug\NeuralNet.pdb
+C:\Users\User\Documents\School\cis 480\Project\CIS480Project\NeuralNet\bin\Debug\NeuralNet.exe
+C:\Users\User\Documents\School\cis 480\Project\CIS480Project\NeuralNet\bin\Debug\NeuralNet.pdb
+C:\Users\User\Documents\School\cis 480\Project\CIS480Project\NeuralNet\obj\Debug\NeuralNet.csprojResolveAssemblyReference.cache
