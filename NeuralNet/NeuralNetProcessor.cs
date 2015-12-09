@@ -11,6 +11,10 @@ namespace NeuralNet
         static void Main(string[] args)
         {
 
+            Dictionary<int, double> trainListTargets = new Dictionary<int, double>();
+            Dictionary<int, double> testListTargets = new Dictionary<int, double>();
+            Dictionary<int, double> testListOutputs = new Dictionary<int, double>();
+
             int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt")
                              select file).Count();
 
@@ -89,11 +93,7 @@ namespace NeuralNet
 
                 trainData.close();
 
-
-
                 //Console.WriteLine("\nDone");
-
-
 
                 /*
                 List<int> topology = new List<int>();
@@ -124,6 +124,10 @@ namespace NeuralNet
                     showVectorVals("Last Training Targets:", finalTrainTargets);
                     Console.WriteLine("Net recent average error: " + (lastTrainError.ToString()));
 
+                    //trainTargets.Add(x, resultVals[0]);
+                    
+                    trainListTargets.Add(x, finalTrainTargets[0]);
+
                     testData.getTopology(topologyTest);
 
                     Console.WriteLine("test pass");
@@ -146,12 +150,23 @@ namespace NeuralNet
                         testData.getTargetOutputs(targetVals);
                         showVectorVals("Test Targets:", targetVals);
                         Debug.Assert(targetVals.Count == topology.Last());
+                        
+                        testListTargets.Add(x, targetVals[0]);
+                        testListOutputs.Add(x, resultVals[0]);
+
                     }
                     
 
                 }
                 testData.close();
             }
+            Console.WriteLine("Last, Actual, Predicted");
+             
+            for(int x = 0; x < testListTargets.Count(); x++)
+            {
+                Console.WriteLine("{0},{1},{2}", Math.Round(1/trainListTargets[x],2), Math.Round(1/testListTargets[x],2), Math.Round(1/testListOutputs[x]),2);
+            }
+            
         }
 
         static void CreateTrainingFile(string filename)
