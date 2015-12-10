@@ -10,10 +10,12 @@ namespace NeuralNet
     {
         static void Main(string[] args)
         {
-
+            //for tracking data (csv file)
             Dictionary<int, double> trainListTargets = new Dictionary<int, double>();
             Dictionary<int, double> testListTargets = new Dictionary<int, double>();
             Dictionary<int, double> testListOutputs = new Dictionary<int, double>();
+            Dictionary<int, double> testOutputsDiffTrainTarget = new Dictionary<int, double>();
+            Dictionary<int, double> testTargetDiffTrainTarget = new Dictionary<int, double>();
 
             int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt")
                              select file).Count();
@@ -127,12 +129,35 @@ namespace NeuralNet
 
 
             }
-            Console.WriteLine("trainTarget, testTarget, testOutput");
-             
-            for(int x = 0; x < testListTargets.Count(); x++)
+
+            Double directionSuccessRate = 0;
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter("outputFile.csv", true))
             {
-                Console.WriteLine("{0},{1},{2}", Math.Round(1/trainListTargets[x],2), Math.Round(1/testListTargets[x],2), Math.Round(1/testListOutputs[x],2));
+                Console.WriteLine("trainTarget, testTarget, testOutput");
+                file.WriteLine("trainTarget, testTarget, testOutput");
+
+                for (int x = 0; x < testListTargets.Count(); x++)
+                {
+                    file.WriteLine("{0},{1},{2}", Math.Round(1 / trainListTargets[x], 2), Math.Round(1 / testListTargets[x], 2), Math.Round(1 / testListOutputs[x], 2));
+                    Console.WriteLine("{0},{1},{2}", Math.Round(1 / trainListTargets[x], 2), Math.Round(1 / testListTargets[x], 2), Math.Round(1 / testListOutputs[x], 2));
+
+                    testOutputsDiffTrainTarget.Add(x, (testListOutputs[x] - trainListTargets[x]));
+                    testTargetDiffTrainTarget.Add(x, (testListTargets[x] - trainListTargets[x]));
+
+                    if ((testOutputsDiffTrainTarget[x]* testTargetDiffTrainTarget [x])> 0)
+                    {
+                        directionSuccessRate++;
+                    }
+
+
+                }
+                directionSuccessRate = directionSuccessRate / testListTargets.Count();
+                Console.WriteLine("successRate: {0}", directionSuccessRate);
+                file.WriteLine("successRate: {0}", directionSuccessRate);
             }
+
+
             
         }
 
