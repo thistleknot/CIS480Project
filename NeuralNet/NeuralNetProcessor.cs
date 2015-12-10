@@ -36,22 +36,23 @@ namespace NeuralNet
                 TrainingData testData = new TrainingData(test);
 
                 // e.g., { 3, 2, 1 }
-                List<int> topology = new List<int>();
-                List<int> topologyTest = new List<int>();
+                //training
+                List<int> topology = new List<int>();                
                 List<double> inputVals = new List<double>();
-                List<double> testInputVals = new List<double>();
                 List<double> targetVals = new List<double>();
                 List<double> resultVals = new List<double>();
+
                 trainData.getTopology(topology);
 
                 NeuralNet myNet = new NeuralNet(topology);
 
-                List<double> finalTrainOutput = new List<double>();
-                List<double> finalTrainTargets = new List<double>();
+                //testing
+                List<int> topologyTest = new List<int>();
+                List<double> testInputVals = new List<double>();
+                List<double> testTargetVals = new List<double>();
+                List<double> testResultVals = new List<double>();
 
-                List<double> testInputs = new List<double>();
-                List<double> testTargets = new List<double>();
-                List<double> testOutputs = new List<double>();
+                List<double> finalTrainTargets = new List<double>();
 
                 int trainingPass = 0;
                 Console.WriteLine("train pass");
@@ -144,15 +145,15 @@ namespace NeuralNet
                         //showVectorVals("Inputs:", testInputVals);
                         myNet.feedForward(testInputVals);
                         // Collect the net's actual output results:
-                        myNet.getResults(resultVals);
-                        showVectorVals("Test Outputs:", resultVals);
+                        myNet.getResults(testResultVals);
+                        showVectorVals("Test Outputs:", testResultVals);
                         // Train the net what the outputs should have been:
-                        testData.getTargetOutputs(targetVals);
-                        showVectorVals("Test Targets:", targetVals);
-                        Debug.Assert(targetVals.Count == topology.Last());
+                        testData.getTargetOutputs(testTargetVals);
+                        showVectorVals("Test Targets:", testTargetVals);
+                        Debug.Assert(testTargetVals.Count == topology.Last());
                         
-                        testListTargets.Add(x, targetVals[0]);
-                        testListOutputs.Add(x, resultVals[0]);
+                        testListTargets.Add(x, testTargetVals[0]);
+                        testListOutputs.Add(x, testResultVals[0]);
 
                     }
                     
