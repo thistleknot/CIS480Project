@@ -134,8 +134,8 @@ namespace NeuralNet
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter("outputFile.csv", true))
             {
-                Console.WriteLine("trainTarget, testTarget, testOutput");
-                file.WriteLine("trainTarget, testTarget, testOutput");
+                Console.WriteLine("trainTarget,testTarget,testOutput");
+                file.WriteLine("trainTarget,testTarget,testOutput");
 
                 for (int x = 0; x < testListTargets.Count(); x++)
                 {
