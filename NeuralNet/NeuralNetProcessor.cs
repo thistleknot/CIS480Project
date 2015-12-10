@@ -74,7 +74,7 @@ namespace NeuralNet
                     myNet.backProp(targetVals);
                     // Report how well the training is working, average over recent
                     // samples:
-                    Console.WriteLine("Net recent average error: " + myNet.RecentAverageError);
+                    //Console.WriteLine("Net recent average error: " + myNet.RecentAverageError);
                     lastTrainError = myNet.RecentAverageError;
                     //if ((trainingPass > 100) && (myNet.RecentAverageError < .03)) break; 
                 }
