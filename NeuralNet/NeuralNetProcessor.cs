@@ -17,9 +17,7 @@ namespace NeuralNet
 
             int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt")
                              select file).Count();
-
             
-
             for (int x = 0; x < fileCount; x++)
             {
 
@@ -76,42 +74,18 @@ namespace NeuralNet
                     myNet.backProp(targetVals);
                     // Report how well the training is working, average over recent
                     // samples:
-                    //Console.WriteLine("Net recent average error: " + myNet.RecentAverageError);
+                    Console.WriteLine("Net recent average error: " + myNet.RecentAverageError);
                     lastTrainError = myNet.RecentAverageError;
                     //if ((trainingPass > 100) && (myNet.RecentAverageError < .03)) break; 
                 }
 
-                //desired output
-                //showVectorVals("Last Training Output:", resultVals);
-                //trainData.getTargetOutputs(targetVals);
-                //showVectorVals("Last Training Targets:", finalTrainTargets);
-                //Console.WriteLine("Net recent average error: " + (lastTrainError.ToString()));
-
                 trainData.close();
 
-                //Console.WriteLine("\nDone");
-
-                /*
-                List<int> topology = new List<int>();
-                List<double> inputVals = new List<double>();
-                List<double> targetVals = new List<double>();
-                List<double> resultVals = new List<double>();
-
-                topology.Add(3);
-                topology.Add(2);
-                topology.Add(1);
-
-                NeuralNet myNet = new NeuralNet(topology);
-
-                myNet.feedForward(inputVals);
-                myNet.backProp(targetVals);
-                myNet.getResults(resultVals);
-                */
-                if(lastTrainError>.9)
-                    {
+                if (lastTrainError > .9)
+                {
                     Console.WriteLine("fail");
                     x = x - 1;
-                    }
+                }
                 else
                 {
                     //desired output
@@ -119,8 +93,6 @@ namespace NeuralNet
                     //trainData.getTargetOutputs(targetVals);
                     //showVectorVals("Last Training Targets:", finalTrainTargets);
                     Console.WriteLine("Net recent average error: " + (lastTrainError.ToString()));
-
-                    //trainListTargets.Add(x, finalTrainTargets[0]);
 
                     testData.getTopology(topologyTest);
 
@@ -138,28 +110,28 @@ namespace NeuralNet
                         //showVectorVals("Inputs:", testInputVals);
                         myNet.feedForward(testInputVals);
                         // Collect the net's actual output results:
-                        myNet.getResults(testResultVals);
-                        showVectorVals("Test Outputs:", testResultVals);
+                        myNet.getResults(resultVals);
+                        showVectorVals("Test Outputs:", resultVals);
                         // Train the net what the outputs should have been:
-                        testData.getTargetOutputs(testTargetVals);
-                        showVectorVals("Test Targets:", testTargetVals);
-                        Debug.Assert(testTargetVals.Count == topology.Last());
-
+                        testData.getTargetOutputs(targetVals);
+                        showVectorVals("Test Targets:", targetVals);
+                        Debug.Assert(targetVals.Count == topology.Last());
                         trainListTargets.Add(x, testInputVals[testInputVals.Count()-1]);
-                        testListTargets.Add(x, testTargetVals[0]);
-                        testListOutputs.Add(x, testResultVals[0]);
-
+                        testListTargets.Add(x, targetVals[targetVals.Count() - 1]);
+                        testListOutputs.Add(x, resultVals[resultVals.Count()-1]);
                     }
-                    
+
 
                 }
                 testData.close();
+
+
             }
-            Console.WriteLine("Last, Actual, Predicted");
+            Console.WriteLine("trainTarget, testTarget, testOutput");
              
             for(int x = 0; x < testListTargets.Count(); x++)
             {
-                Console.WriteLine("{0},{1},{2}", Math.Round(1/trainListTargets[x],2), Math.Round(1/testListTargets[x],2), Math.Round(1/testListOutputs[x]),2);
+                Console.WriteLine("{0},{1},{2}", Math.Round(1/trainListTargets[x],2), Math.Round(1/testListTargets[x],2), Math.Round(1/testListOutputs[x],2));
             }
             
         }
