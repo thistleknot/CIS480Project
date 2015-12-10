@@ -52,8 +52,6 @@ namespace NeuralNet
                 List<double> testTargetVals = new List<double>();
                 List<double> testResultVals = new List<double>();
 
-                List<double> finalTrainTargets = new List<double>();
-
                 int trainingPass = 0;
                 Console.WriteLine("train pass");
                 while (!trainData.isEof())
@@ -73,9 +71,6 @@ namespace NeuralNet
                     // Train the net what the outputs should have been:
                     trainData.getTargetOutputs(targetVals);
                     //showVectorVals("Targets:", targetVals);
-
-                    //new
-                    finalTrainTargets = targetVals;
 
                     Debug.Assert(targetVals.Count == topology.Last());
                     myNet.backProp(targetVals);
@@ -122,12 +117,10 @@ namespace NeuralNet
                     //desired output
                     showVectorVals("Last Training Output:", resultVals);
                     //trainData.getTargetOutputs(targetVals);
-                    showVectorVals("Last Training Targets:", finalTrainTargets);
+                    //showVectorVals("Last Training Targets:", finalTrainTargets);
                     Console.WriteLine("Net recent average error: " + (lastTrainError.ToString()));
 
-                    //trainTargets.Add(x, resultVals[0]);
-                    
-                    trainListTargets.Add(x, finalTrainTargets[0]);
+                    //trainListTargets.Add(x, finalTrainTargets[0]);
 
                     testData.getTopology(topologyTest);
 
@@ -151,7 +144,8 @@ namespace NeuralNet
                         testData.getTargetOutputs(testTargetVals);
                         showVectorVals("Test Targets:", testTargetVals);
                         Debug.Assert(testTargetVals.Count == topology.Last());
-                        
+
+                        trainListTargets.Add(x, testInputVals[testInputVals.Count()-1]);
                         testListTargets.Add(x, testTargetVals[0]);
                         testListOutputs.Add(x, testResultVals[0]);
 
