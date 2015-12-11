@@ -28,7 +28,7 @@ namespace NeuralNet
                 //need to include iterations
                 string train = "train" + x.ToString("D3") + ".txt";
                 string test = "test" + x.ToString("D3") + ".txt";
-                double lastTrainError = 1;
+                double lastTrainError = 0;
 
                 Console.WriteLine("file {0} out of {1}", x+1, fileCount);
 
@@ -78,51 +78,72 @@ namespace NeuralNet
                     // samples:
                     //Console.WriteLine("Net recent average error: " + myNet.RecentAverageError);
                     lastTrainError = myNet.RecentAverageError;
+                    //WriteLine(trainingPass);
                     //if ((trainingPass > 100) && (myNet.RecentAverageError < .03)) break; 
                 }
 
                 trainData.close();
 
-                if (lastTrainError > .9)
+                if (lastTrainError > .005)
                 {
                     Console.WriteLine("fail");
                     x = x - 1;
                 }
                 else
                 {
-                    //desired output
-                    showVectorVals("Last Training Output:", resultVals);
-                    //trainData.getTargetOutputs(targetVals);
-                    //showVectorVals("Last Training Targets:", finalTrainTargets);
-                    Console.WriteLine("Net recent average error: " + (lastTrainError.ToString()));
-
-                    testData.getTopology(topologyTest);
-
-                    Console.WriteLine("test pass");
-
-                    while (!testData.isEof())
+                    /*
+                    if (Math.Round(resultVals[resultVals.Count() - 1], 1) < 2)
                     {
-
-                        if (testData.getNextInputs(testInputVals) != topology[0])
-                        {
-                            break;
-                        }
-
-                        //test data
-                        //showVectorVals("Inputs:", testInputVals);
-                        myNet.feedForward(testInputVals);
-                        // Collect the net's actual output results:
-                        myNet.getResults(resultVals);
-                        showVectorVals("Test Outputs:", resultVals);
-                        // Train the net what the outputs should have been:
-                        testData.getTargetOutputs(targetVals);
-                        showVectorVals("Test Targets:", targetVals);
-                        Debug.Assert(targetVals.Count == topology.Last());
-                        trainListTargets.Add(x, testInputVals[testInputVals.Count()-1]);
-                        testListTargets.Add(x, targetVals[targetVals.Count() - 1]);
-                        testListOutputs.Add(x, resultVals[resultVals.Count()-1]);
+                        Console.WriteLine(Math.Round(resultVals[resultVals.Count() - 1], 1));
+                        Console.WriteLine("fail");
+                        x = x - 1;
                     }
+                    else
+                    */
+                    {
+                        //if (Math.Round(resultVals[resultVals.Count() - 1], 1) < 1)
+                        {
+                            //Console.WriteLine("fail");
+                            //x = x - 1;
+                        }
+                        //else
 
+                             
+
+                            //desired output
+                            showVectorVals("Last Training Output:", resultVals);
+                            //trainData.getTargetOutputs(targetVals);
+                            //showVectorVals("Last Training Targets:", finalTrainTargets);
+                            Console.WriteLine("Net recent average error: " + (lastTrainError.ToString()));
+
+                            testData.getTopology(topologyTest);
+
+                            Console.WriteLine("test pass");
+
+                            while (!testData.isEof())
+                            {
+
+                                if (testData.getNextInputs(testInputVals) != topology[0])
+                                {
+                                    break;
+                                }
+
+                                //test data
+                                //showVectorVals("Inputs:", testInputVals);
+                                myNet.feedForward(testInputVals);
+                                // Collect the net's actual output results:
+                                myNet.getResults(resultVals);
+                                showVectorVals("Test Outputs:", resultVals);
+                                // Train the net what the outputs should have been:
+                                testData.getTargetOutputs(targetVals);
+                                showVectorVals("Test Targets:", targetVals);
+                                Debug.Assert(targetVals.Count == topology.Last());
+                                trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
+                                testListTargets.Add(x, targetVals[targetVals.Count() - 1]);
+                                testListOutputs.Add(x, resultVals[resultVals.Count() - 1]);
+                            }
+                        
+                    }
 
                 }
                 testData.close();
