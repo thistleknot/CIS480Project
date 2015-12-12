@@ -19,7 +19,22 @@ namespace NeuralNet
 
             int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt")
                              select file).Count();
+
             
+            bool price = true;
+
+            string entry = "";
+
+            //prevents simulation
+            //Console.WriteLine("(m)ovement prediction or [n]umber");
+            //entry = Console.ReadLine();
+            if (entry == "m")
+            {
+                price = false;
+            }
+            
+
+
             for (int x = 0; x < fileCount; x++)
             {
 
@@ -77,14 +92,14 @@ namespace NeuralNet
                     // Report how well the training is working, average over recent
                     // samples:
                     //Console.WriteLine("Net recent average error: " + myNet.RecentAverageError);
-                    lastTrainError = myNet.RecentAverageError;
+                    //lastTrainError = myNet.RecentAverageError;
                     //WriteLine(trainingPass);
                     //if ((trainingPass > 100) && (myNet.RecentAverageError < .03)) break; 
                 }
 
                 trainData.close();
 
-                if (lastTrainError > .005)
+                if (lastTrainError > .001)
                 {
                     Console.WriteLine("fail");
                     x = x - 1;
@@ -132,16 +147,42 @@ namespace NeuralNet
                                 //showVectorVals("Inputs:", testInputVals);
                                 myNet.feedForward(testInputVals);
                                 // Collect the net's actual output results:
-                                myNet.getResults(resultVals);
-                                showVectorVals("Test Outputs:", resultVals);
-                                // Train the net what the outputs should have been:
-                                testData.getTargetOutputs(targetVals);
-                                showVectorVals("Test Targets:", targetVals);
-                                Debug.Assert(targetVals.Count == topology.Last());
-                                trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
-                                testListTargets.Add(x, targetVals[targetVals.Count() - 1]);
-                                testListOutputs.Add(x, resultVals[resultVals.Count() - 1]);
+                                myNet.getResults(testResultVals);
+                            //showVectorVals("Test Outputs:", resultVals, price);
+                            showVectorVals("Test Outputs:", testResultVals, price);
+                            // Train the net what the outputs should have been:
+                            //testData.getTargetOutputs(targetVals);
+                            testData.getTargetOutputs(testTargetVals);
+                            showVectorVals("Test Targets:", testTargetVals, price);
+                                Debug.Assert(testTargetVals.Count == topology.Last());
+
+                            if ((1/Math.Round(testResultVals[testResultVals.Count() - 1]))==1)
+                            {
+                                if (price)
+                                {
+                                    Console.WriteLine("fail");
+                                    x = x - 1;
+                                }
+                                else
+                                {
+                                    trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
+                                    //was set to targetVals this is just my text file
+                                    testListTargets.Add(x, testTargetVals[testTargetVals.Count() - 1]);
+                                    //was set to resultVals this is just my text file
+                                    testListOutputs.Add(x, testResultVals[testResultVals.Count() - 1]);
+
+                                }
                             }
+                            else
+                            {
+                                trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
+                                //was set to targetVals this is just my text file
+                                testListTargets.Add(x, testTargetVals[testTargetVals.Count() - 1]);
+                                //was set to resultVals this is just my text file
+                                testListOutputs.Add(x, testResultVals[testResultVals.Count() - 1]);
+                            }
+
+                        }
                         
                     }
 
@@ -150,6 +191,7 @@ namespace NeuralNet
 
 
             }
+
 
             Double directionSuccessRate = 0;
 
@@ -160,8 +202,16 @@ namespace NeuralNet
 
                 for (int x = 0; x < testListTargets.Count(); x++)
                 {
-                    file.WriteLine("{0},{1},{2}", Math.Round(1 / trainListTargets[x], 2), Math.Round(1 / testListTargets[x], 2), Math.Round(1 / testListOutputs[x], 2));
-                    Console.WriteLine("{0},{1},{2}", Math.Round(1 / trainListTargets[x], 2), Math.Round(1 / testListTargets[x], 2), Math.Round(1 / testListOutputs[x], 2));
+                    if (price)
+                    {
+                        file.WriteLine("{0},{1},{2}", Math.Round(1 / trainListTargets[x], 2), Math.Round(1 / testListTargets[x], 2), Math.Round(1 / testListOutputs[x], 2));
+                        Console.WriteLine("{0},{1},{2}", Math.Round(1 / trainListTargets[x], 2), Math.Round(1 / testListTargets[x], 2), Math.Round(1 / testListOutputs[x], 2));
+                    }
+                    else
+                    {
+                        file.WriteLine("{0},{1},{2}", trainListTargets[x], Math.Round(testListTargets[x], 2), Math.Round(testListOutputs[x], 0));
+                        Console.WriteLine("{0},{1},{2}", Math.Round(trainListTargets[x], 2), Math.Round(testListTargets[x], 2), Math.Round(testListOutputs[x], 0));
+                    }
 
                     testOutputsDiffTrainTarget.Add(x, (testListOutputs[x] - trainListTargets[x]));
                     testTargetDiffTrainTarget.Add(x, (testListTargets[x] - trainListTargets[x]));
@@ -204,6 +254,25 @@ namespace NeuralNet
             Console.Write(label + " ");
             for (int i = 0; i < v.Count; ++i) {
                 Console.Write(Math.Round((1/v[i]),2) + " ");
+            }
+
+            Console.Write("\n");
+        }
+
+        static void showVectorVals(string label, List<double> v, bool move)
+        {
+            Console.Write(label + " ");
+            
+            for (int i = 0; i < v.Count; ++i)
+            {
+                if (move)
+                { Console.Write(Math.Round((1 / v[i]), 2) + " ");
+                }
+                else
+                {
+                    Console.Write(Math.Round((v[i]), 2) + " ");
+                }
+                
             }
 
             Console.Write("\n");
