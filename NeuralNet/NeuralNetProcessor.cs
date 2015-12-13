@@ -20,19 +20,18 @@ namespace NeuralNet
             int fileCount = (from file in Directory.EnumerateFiles(@".\", "train*.txt")
                              select file).Count();
 
-            
             bool price = true;
 
-            string entry = "";
+            //if (!args[].Equals(null))
+            if (!(args.Length == 0))
+            {
+                price = false;
+            }
 
             //prevents simulation
             //Console.WriteLine("(m)ovement prediction or [n]umber");
             //entry = Console.ReadLine();
-            if (entry == "m")
-            {
-                price = false;
-            }
-            
+
 
 
             for (int x = 0; x < fileCount; x++)
@@ -175,7 +174,7 @@ namespace NeuralNet
                             }
                             else
                             {
-                                trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
+                                //trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
                                 //was set to targetVals this is just my text file
                                 testListTargets.Add(x, testTargetVals[testTargetVals.Count() - 1]);
                                 //was set to resultVals this is just my text file
@@ -197,8 +196,16 @@ namespace NeuralNet
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter("outputFile.csv", true))
             {
-                Console.WriteLine("trainTarget,testTarget,testOutput");
-                file.WriteLine("trainTarget,testTarget,testOutput");
+                if (price)
+                {
+                    Console.WriteLine("trainTarget,testTarget,testOutput");
+                    file.WriteLine("trainTarget,testTarget,testOutput");
+                }
+                else
+                {
+                    Console.WriteLine("testTarget,testOutput");
+                    file.WriteLine("testTarget,testOutput");
+                }
 
                 for (int x = 0; x < testListTargets.Count(); x++)
                 {
@@ -209,17 +216,21 @@ namespace NeuralNet
                     }
                     else
                     {
-                        file.WriteLine("{0},{1},{2}", trainListTargets[x], Math.Round(testListTargets[x], 2), Math.Round(testListOutputs[x], 0));
-                        Console.WriteLine("{0},{1},{2}", Math.Round(trainListTargets[x], 2), Math.Round(testListTargets[x], 2), Math.Round(testListOutputs[x], 0));
+                        file.WriteLine("{0},{1}", testListTargets[x], ((double)(testListOutputs[x])).ToString(".################"));
+                        Console.WriteLine("{0},{1}", testListTargets[x], testListOutputs[x]);
                     }
 
-                    testOutputsDiffTrainTarget.Add(x, (testListOutputs[x] - trainListTargets[x]));
-                    testTargetDiffTrainTarget.Add(x, (testListTargets[x] - trainListTargets[x]));
-
-                    if ((testOutputsDiffTrainTarget[x]* testTargetDiffTrainTarget [x])> 0)
+                    if (price)
                     {
-                        directionSuccessRate++;
+                        testOutputsDiffTrainTarget.Add(x, (testListOutputs[x] - trainListTargets[x]));
+                        testTargetDiffTrainTarget.Add(x, (testListTargets[x] - trainListTargets[x]));
+                        if ((testOutputsDiffTrainTarget[x] * testTargetDiffTrainTarget[x]) > 0)
+                        {
+                            directionSuccessRate++;
+                        }
+
                     }
+
 
 
                 }
