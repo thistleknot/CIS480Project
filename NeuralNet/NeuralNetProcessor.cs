@@ -174,6 +174,7 @@ namespace NeuralNet
                             }
                             else
                             {
+                                trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
                                 //trainListTargets.Add(x, testInputVals[testInputVals.Count() - 1]);
                                 //was set to targetVals this is just my text file
                                 testListTargets.Add(x, testTargetVals[testTargetVals.Count() - 1]);
