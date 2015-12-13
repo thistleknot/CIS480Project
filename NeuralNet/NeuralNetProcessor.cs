@@ -230,6 +230,11 @@ namespace NeuralNet
                         }
 
                     }
+                    else
+                    {
+                        directionSuccessRate = directionSuccessRate + (1 - (Math.Round(testListOutputs[x], 0) - Math.Round(testListTargets[x], 0)));
+
+                    }
 
 
 
@@ -270,13 +275,13 @@ namespace NeuralNet
             Console.Write("\n");
         }
 
-        static void showVectorVals(string label, List<double> v, bool move)
+        static void showVectorVals(string label, List<double> v, bool price)
         {
             Console.Write(label + " ");
             
             for (int i = 0; i < v.Count; ++i)
             {
-                if (move)
+                if (price)
                 { Console.Write(Math.Round((1 / v[i]), 2) + " ");
                 }
                 else
